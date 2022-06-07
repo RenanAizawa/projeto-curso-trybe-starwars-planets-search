@@ -1,9 +1,14 @@
 import React from 'react';
-import './App.css';
+import Header from './components/Header';
+import MapToPlanets from './components/MapToPlanets';
+import ProviderPlanets from './context/ProviderPlanets';
 
 function App() {
   return (
-    <span>Hello, Renan</span>
+    <ProviderPlanets>
+      <Header />
+      <MapToPlanets />
+    </ProviderPlanets>
   );
 }
 
