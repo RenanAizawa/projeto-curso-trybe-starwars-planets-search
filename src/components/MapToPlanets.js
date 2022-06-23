@@ -1,8 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import planetContext from '../context/planetContext';
 
 function MapToPlanets() {
   const { result } = useContext(planetContext);
+  const [planetsFilter, setPlanetsFilter] = useState([]);
+  useEffect(() => {}, []);
+  const [name, setName] = useState('');
+
   const planetToMap = () => (
     result.map((planet) => (
       <tr key={ planet.name }>
@@ -50,8 +54,25 @@ function MapToPlanets() {
   );
   return (
     <div>
+      <header>
+        <div>
+          <div>
+            <input
+              type="text"
+              name="name-filter"
+              data-testid="name-filter"
+              onChange={ (e) => setName(e.target.value) }
+              value={ name }
+            />
+          </div>
+          <div>
+            <div>primeiro forms</div>
+            <div>segundo forms</div>
+          </div>
+        </div>
+      </header>
       <table>
-        <tbody>
+        <thead>
           <tr>
             <th>Name</th>
             <th>Rotation Period</th>
@@ -67,6 +88,8 @@ function MapToPlanets() {
             <th>Edited</th>
             <th>URL</th>
           </tr>
+        </thead>
+        <tbody>
           {result.length > 0 && planetToMap()}
         </tbody>
       </table>
