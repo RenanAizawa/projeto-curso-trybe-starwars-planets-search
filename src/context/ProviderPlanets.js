@@ -9,16 +9,16 @@ function ProviderPlanets({ children }) {
       const response = await fetch('https://swapi-trybe.herokuapp.com/api/planets/');
       const planet = await response.json();
       const result = await planet.results;
-      setPlanets(result);
+      // console.log('provider', result);
+      return (result);
     };
-    data();
+    setPlanets(data());
   }, []);
 
   const context = {
-    result: planets,
-    setPlanets,
+    planets,
   };
-
+  console.log(context);
   return (
     <planetContext.Provider value={ context }>
       {children}
