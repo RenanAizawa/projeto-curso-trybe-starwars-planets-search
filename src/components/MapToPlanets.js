@@ -2,17 +2,18 @@ import React, { useContext, useEffect, useState } from 'react';
 import planetContext from '../context/planetContext';
 
 function MapToPlanets() {
-  const [planets] = useContext(planetContext);
-  console.log('componente', planets);
+  const { planets } = useContext(planetContext);
+  const [nameSearch, setNameSearch] = useState({ filterByName: { name: '' } });
   const [planetsFilter, setPlanetsFilter] = useState([]);
   useEffect(() => {
-    const espera = async () => {
-      const resposta = await planets;
-      return resposta;
-    };
-    setPlanetsFilter(espera());
-    console.log(planetsFilter);
-  }, [planets, planetsFilter]);
+    if (planets.length) {
+      const filterName = planets.filter((planet) => (
+        planet.name.toLowerCase().includes(nameSearch.filterByName.name)
+      ));
+      setPlanetsFilter(filterName);
+    }
+  }, [planets, nameSearch]);
+
   return (
     <div>
       <header>
@@ -22,8 +23,10 @@ function MapToPlanets() {
               type="text"
               name="name-filter"
               data-testid="name-filter"
-              // onChange={ (e) => setNameSearch(e.target.value) }
-              // value={ nameSearch }
+              placeholder="planet search"
+              onChange={ ({ target }) => setNameSearch({
+                filterByName: { name: target.value } }) }
+              value={ nameSearch.filterByName.name }
             />
           </div>
           <div>
@@ -64,12 +67,24 @@ function MapToPlanets() {
         </thead>
         <tbody>
           {
-            // planets
-            // && planets.map((planet) => (
-            //   <tr key={ planet.name }>
-            //     <td>{planet.name}</td>
-            //   </tr>
-            // ))
+            planetsFilter
+            && planetsFilter.map((planet) => (
+              <tr key={ planet.name }>
+                <td>{planet.name}</td>
+                <td>{planet.rotation_period}</td>
+                <td>{planet.orbital_period}</td>
+                <td>{planet.diameter}</td>
+                <td>{planet.climate}</td>
+                <td>{planet.gravity}</td>
+                <td>{planet.terrain}</td>
+                <td>{planet.surface_water}</td>
+                <td>{planet.population}</td>
+                <td>{planet.films}</td>
+                <td>{planet.created}</td>
+                <td>{planet.edited}</td>
+                <td>{planet.url}</td>
+              </tr>
+            ))
           }
         </tbody>
       </table>
