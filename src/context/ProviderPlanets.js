@@ -4,6 +4,9 @@ import planetContext from './planetContext';
 
 function ProviderPlanets({ children }) {
   const [planets, setPlanets] = useState({});
+  const [espec, setEspec] = useState(['population',
+    'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
+  const [equal, setEqual] = useState(['maior que', 'menor que', 'igual a']);
 
   useEffect(() => {
     const data = async () => {
@@ -17,6 +20,10 @@ function ProviderPlanets({ children }) {
 
   const context = {
     planets,
+    espec,
+    setEspec,
+    equal,
+    setEqual,
   };
 
   return (
