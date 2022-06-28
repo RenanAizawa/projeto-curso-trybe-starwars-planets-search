@@ -159,6 +159,7 @@ function MapToPlanets() {
             <button
               type="button"
               onClick={ () => handleDeleteFilter(i) }
+              data-testid="button-remove-filters"
             >
               X
 
