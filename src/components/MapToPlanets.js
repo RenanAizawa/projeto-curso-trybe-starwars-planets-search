@@ -23,11 +23,11 @@ function MapToPlanets() {
           acumula.filter((planeta) => {
             switch (filtro.comparison) {
             case 'maior que':
-              return planeta[filtro.column] > Number(filtro.value);
+              return Number(planeta[filtro.column]) > Number(filtro.value);
             case 'menor que':
-              return planeta[filtro.column] < Number(filtro.value);
+              return Number(planeta[filtro.column]) < Number(filtro.value);
             case 'igual a':
-              return planeta[filtro.column] === Number(filtro.value);
+              return Number(planeta[filtro.column]) === Number(filtro.value);
             default:
               return true;
             }
@@ -81,9 +81,9 @@ function MapToPlanets() {
     <input
       type="number"
       data-testid="value-filter"
-      placeholder="0"
       name="value"
       onChange={ ({ target }) => setValue(target.value) }
+      value={ value }
     />
   );
 
