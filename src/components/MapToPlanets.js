@@ -1,49 +1,23 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import planetContext from '../context/planetContext';
 
 function MapToPlanets() {
-  const { planets, espec, equal } = useContext(planetContext);
-  const [nameSearch, setNameSearch] = useState({ filterByName: { name: '' } });
-  const [planetsFilter, setPlanetsFilter] = useState([]);
-  const [filterEspec, setFilterEspec] = useState([]);
-  const [column, setColumn] = useState('population');
-  const [comparison, setComparison] = useState('maior que');
-  const [value, setValue] = useState(0);
-  const [numericFilter, setNumericFilter] = useState({
-    filterByNumericValues: [],
-  });
-
-  useEffect(() => {
-    if (planets.length) {
-      const filterName = planets.filter((planet) => (
-        planet.name.toLowerCase().includes(nameSearch.filterByName.name)
-      ));
-      const activFilter = numericFilter.filterByNumericValues
-        .reduce((acumula, filtro) => (
-          acumula.filter((planeta) => {
-            switch (filtro.comparison) {
-            case 'maior que':
-              return Number(planeta[filtro.column]) > Number(filtro.value);
-            case 'menor que':
-              return Number(planeta[filtro.column]) < Number(filtro.value);
-            case 'igual a':
-              return Number(planeta[filtro.column]) === Number(filtro.value);
-            default:
-              return true;
-            }
-          })
-        ), filterName);
-      setPlanetsFilter(activFilter);
-    }
-    if (espec.length) {
-      const req5 = numericFilter.filterByNumericValues.reduce((acc, itemEspec) => (
-        acc.filter((item) => (
-          item !== itemEspec.column
-        ))
-      ), espec);
-      setFilterEspec(req5);
-    }
-  }, [planets, nameSearch, espec, numericFilter.filterByNumericValues]);
+  const {
+    setNameSearch,
+    planetsFilter,
+    numericFilter,
+    nameSearch,
+    handleDeleteFilter,
+    handleResetFilters,
+    segundBigFilter,
+    filterEspec,
+    equal,
+    setColumn,
+    setComparison,
+    value,
+    setValue,
+    handleButton,
+  } = useContext(planetContext);
 
   const columnFilter = () => (
     <select
@@ -92,22 +66,6 @@ function MapToPlanets() {
     />
   );
 
-  const handleButton = () => {
-    const obj = {
-      column,
-      comparison,
-      value,
-    };
-    setNumericFilter(
-      {
-        filterByNumericValues: [
-          ...numericFilter.filterByNumericValues,
-          obj,
-        ],
-      },
-    );
-  };
-
   const buttonFilter = () => (
     <button
       type="button"
@@ -117,22 +75,6 @@ function MapToPlanets() {
       Number Filter
     </button>
   );
-
-  const handleDeleteFilter = (i) => {
-    const deleteFilter = numericFilter.filterByNumericValues
-      .filter((_filt, itemIndex) => (
-        itemIndex !== i
-      ));
-    setNumericFilter({
-      filterByNumericValues: [...deleteFilter],
-    });
-  };
-
-  const handleResetFilters = () => {
-    setNumericFilter({
-      filterByNumericValues: [],
-    });
-  };
 
   return (
     <div>
@@ -150,6 +92,7 @@ function MapToPlanets() {
         </div>
         <div>
           <div>
+            <h3>Filtro Numerico</h3>
             <form>
               {columnFilter()}
               {comparisonFilter()}
@@ -157,7 +100,7 @@ function MapToPlanets() {
               {buttonFilter()}
             </form>
           </div>
-          <div>segundo forms</div>
+          { segundBigFilter() }
         </div>
       </header>
       <button
@@ -219,7 +162,7 @@ function MapToPlanets() {
             planetsFilter
             && planetsFilter.map((planet) => (
               <tr key={ planet.name }>
-                <td>{planet.name}</td>
+                <td data-testid="planet-name">{planet.name}</td>
                 <td>{planet.rotation_period}</td>
                 <td>{planet.orbital_period}</td>
                 <td>{planet.diameter}</td>
