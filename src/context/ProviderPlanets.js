@@ -58,7 +58,15 @@ function ProviderPlanets({ children }) {
             }
           })
         ), filterName);
-      setPlanetsFilter(activFilter);
+      const ordenamento = () => {
+        const { order: { column, sort } } = ordem;
+        if (sort === 'ASC') {
+          console.log('ASC', column);
+          return activFilter.sort((a, b) => a[column] - b[column]);
+        }
+        return activFilter.sort((a, b) => b[column] - a[column]);
+      };
+      setPlanetsFilter(ordenamento());
     }
     if (espec.length) {
       const req5 = numericFilter.filterByNumericValues.reduce((acc, itemEspec) => (
@@ -116,12 +124,14 @@ function ProviderPlanets({ children }) {
   const segundBigFilter = () => (
     <div>
       <h3>Ordenamento</h3>
-      <select data-testid="column-sort">
+      <select
+        data-testid="column-sort"
+        onChange={ ({ target }) => setOrderColumn(target.value) }
+      >
         {espec.map((item) => (
           <option
             key={ item }
             value={ item }
-            onChange={ ({ target }) => setOrderColumn(target.value) }
           >
             {item}
           </option>
@@ -135,7 +145,6 @@ function ProviderPlanets({ children }) {
           value="ASC"
           name="ordenamento"
           data-testid="column-sort-input-asc"
-          checked
           onChange={ ({ target }) => setOrderComparison(target.value) }
         />
       </label>
