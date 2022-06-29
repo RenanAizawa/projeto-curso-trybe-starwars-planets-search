@@ -32,42 +32,59 @@ function ProviderPlanets({ children }) {
   const [orderComparison, setOrderComparison] = useState('ASC');
   const [ordem, setOrdem] = useState({
     order: {
-      column: 'population',
+      column: 'name',
       sort: 'ASC',
     },
   });
 
-  useEffect(() => {
+  const meuReduce = (filterName) => {
+    const activFilter = numericFilter.filterByNumericValues
+      .reduce((acumula, filtro) => (
+        acumula.filter((planeta) => {
+          switch (filtro.comparison) {
+          case 'maior que':
+            return Number(planeta[filtro.column]) > Number(filtro.value);
+          case 'menor que':
+            return Number(planeta[filtro.column]) < Number(filtro.value);
+          case 'igual a':
+            return Number(planeta[filtro.column]) === Number(filtro.value);
+          default:
+            return true;
+          }
+        })
+      ), filterName);
+    return activFilter;
+  };
+
+  const inicial = () => {
     if (planets.length) {
       const filterName = planets.filter((planet) => (
         planet.name.toLowerCase().includes(nameSearch.filterByName.name)
       ));
-
-      const activFilter = numericFilter.filterByNumericValues
-        .reduce((acumula, filtro) => (
-          acumula.filter((planeta) => {
-            switch (filtro.comparison) {
-            case 'maior que':
-              return Number(planeta[filtro.column]) > Number(filtro.value);
-            case 'menor que':
-              return Number(planeta[filtro.column]) < Number(filtro.value);
-            case 'igual a':
-              return Number(planeta[filtro.column]) === Number(filtro.value);
-            default:
-              return true;
-            }
-          })
-        ), filterName);
+      const activFilter = meuReduce(filterName);
+      const menosUm = -1;
       const ordenamento = () => {
         const { order: { column, sort } } = ordem;
-        if (sort === 'ASC') {
+        if (column === 'name') {
           console.log('ASC', column);
+          return (activFilter.sort((a, b) => {
+            if (a.name < b.name) {
+              return menosUm;
+            }
+            return 1;
+          }));
+        }
+        if (sort === 'ASC') {
           return activFilter.sort((a, b) => a[column] - b[column]);
         }
         return activFilter.sort((a, b) => b[column] - a[column]);
       };
       setPlanetsFilter(ordenamento());
     }
+  };
+
+  useEffect(() => {
+    inicial();
     if (espec.length) {
       const req5 = numericFilter.filterByNumericValues.reduce((acc, itemEspec) => (
         acc.filter((item) => (
