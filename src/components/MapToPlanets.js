@@ -36,7 +36,12 @@ function MapToPlanets() {
       setPlanetsFilter(activFilter);
     }
     if (espec.length) {
-      setFilterEspec(espec);
+      const req5 = numericFilter.filterByNumericValues.reduce((acc, itemEspec) => (
+        acc.filter((item) => (
+          item !== itemEspec.column
+        ))
+      ), espec);
+      setFilterEspec(req5);
     }
   }, [planets, nameSearch, espec, numericFilter.filterByNumericValues]);
 
@@ -123,6 +128,12 @@ function MapToPlanets() {
     });
   };
 
+  const handleResetFilters = () => {
+    setNumericFilter({
+      filterByNumericValues: [],
+    });
+  };
+
   return (
     <div>
       <header>
@@ -149,6 +160,13 @@ function MapToPlanets() {
           <div>segundo forms</div>
         </div>
       </header>
+      <button
+        type="button"
+        data-testid="button-remove-filters"
+        onClick={ handleResetFilters }
+      >
+        Remover Filtros
+      </button>
       <div>
         {numericFilter
         && numericFilter.filterByNumericValues.map((filt, i) => (
@@ -159,6 +177,7 @@ function MapToPlanets() {
             <button
               type="button"
               onClick={ () => handleDeleteFilter(i) }
+              data-testid="filter"
             >
               X
 
