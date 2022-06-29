@@ -170,14 +170,13 @@ function MapToPlanets() {
       <div>
         {numericFilter
         && numericFilter.filterByNumericValues.map((filt, i) => (
-          <div key={ ` ${filt.comparison}-${i}` }>
+          <div key={ ` ${filt.comparison}-${i}` } data-testid="filter">
             <p>
               {`${filt.column}-${filt.comparison}-${filt.value}`}
             </p>
             <button
               type="button"
               onClick={ () => handleDeleteFilter(i) }
-              data-testid="filter"
             >
               X
 
